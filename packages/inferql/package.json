@@ -3,16 +3,7 @@
   "version": "0.0.1",
   "description": "SQL in TypeScript, checked and typed: `sql('SELECT ...')` runs the query and infers its row and parameter types from your .sql migrations, and the bundled oxlint plugin validates every query against the real database. SQLite, MySQL and PostgreSQL included.",
   "keywords": [
-    "inferql",
-    "lint",
-    "mysql",
-    "oxlint",
-    "postgres",
-    "safeql",
-    "sql",
-    "sqlite",
-    "type-level",
-    "typescript"
+    "sql"
   ],
   "homepage": "https://github.com/nakita628/inferql",
   "bugs": {
