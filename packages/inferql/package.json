@@ -1,0 +1,112 @@
+{
+  "name": "inferql",
+  "version": "0.0.1",
+  "description": "SQL in TypeScript, checked and typed: `sql('SELECT ...')` runs the query and infers its row and parameter types from your .sql migrations, and the bundled oxlint plugin validates every query against the real database. SQLite, MySQL and PostgreSQL included.",
+  "keywords": [
+    "inferql",
+    "lint",
+    "mysql",
+    "oxlint",
+    "postgres",
+    "safeql",
+    "sql",
+    "sqlite",
+    "type-level",
+    "typescript"
+  ],
+  "homepage": "https://github.com/nakita628/inferql",
+  "bugs": {
+    "url": "https://github.com/nakita628/inferql/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nakita628/inferql.git",
+    "directory": "packages/inferql"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./oxlint": {
+      "source": "./src/oxlint.ts",
+      "types": "./dist/oxlint.d.ts",
+      "import": "./dist/oxlint.js",
+      "default": "./dist/oxlint.js"
+    },
+    "./sqlite": {
+      "source": "./src/dialects/sqlite.ts",
+      "types": "./dist/sqlite.d.ts",
+      "import": "./dist/sqlite.js",
+      "default": "./dist/sqlite.js"
+    },
+    "./mysql": {
+      "source": "./src/dialects/mysql.ts",
+      "types": "./dist/mysql.d.ts",
+      "import": "./dist/mysql.js",
+      "default": "./dist/mysql.js"
+    },
+    "./postgres": {
+      "source": "./src/dialects/postgres.ts",
+      "types": "./dist/postgres.d.ts",
+      "import": "./dist/postgres.js",
+      "default": "./dist/postgres.js"
+    },
+    "./introspect": {
+      "source": "./src/introspect.ts",
+      "types": "./dist/introspect.d.ts",
+      "import": "./dist/introspect.js",
+      "default": "./dist/introspect.js"
+    }
+  },
+  "scripts": {
+    "build": "vp pack",
+    "check": "vp check",
+    "fix": "vp check --fix",
+    "test": "vp pack && vp test"
+  },
+  "dependencies": {
+    "synckit": "^0.11.13"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "mysql2": "^3.24.3",
+    "oxlint": "1.79.0",
+    "postgres": "^3.4.9",
+    "typescript": "^7.0.2"
+  },
+  "peerDependencies": {
+    "mysql2": ">=3",
+    "oxlint": ">=1.79.0",
+    "postgres": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "mysql2": {
+      "optional": true
+    },
+    "oxlint": {
+      "optional": true
+    },
+    "postgres": {
+      "optional": true
+    }
+  },
+  "typescript": {
+    "contentMapper": {
+      "compilerOptions": [],
+      "dynamicConfig": true,
+      "exec": [
+        "node",
+        "dist/mapper.js"
+      ]
+    }
+  }
+}

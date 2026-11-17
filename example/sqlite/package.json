@@ -1,0 +1,17 @@
+{
+  "name": "@inferql/example-sqlite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit --runExternalCode && vp check",
+    "fix": "vp check --fix"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "inferql": "workspace:*",
+    "oxlint": "1.79.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "typescript": "7.1.0-beta",
+    "vite-plus": "0.3.0"
+  }
+}

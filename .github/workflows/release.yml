@@ -1,0 +1,75 @@
+name: Release
+
+# Changesets on every push to main, with both registries reached through OIDC trusted publishing,
+# so no npm or Marketplace token is stored in the repository.
+#
+# - While .changeset/ holds changesets, changesets/action opens (or updates) a "Version Packages"
+#   pull request that runs `pnpm changeset:version`: the new versions and CHANGELOG.md entries.
+# - Once that pull request is merged and no changesets are left, it runs `pnpm release`:
+#   `changeset publish` publishes every public package whose version is not on npm yet (inferql)
+#   and tags the private ones (vscode-inferql), then `vsce publish --oidc --skip-duplicate`
+#   publishes the extension to the VS Code Marketplace when its version is new. The action then
+#   pushes the tags and creates a GitHub release for each, through the GitHub API.
+#
+# Trusted publishing has to be configured on both sides for repository nakita628/inferql, workflow
+# release.yml and environment `release`:
+# - npmjs.com: the Trusted Publisher settings of the `inferql` package.
+# - Visual Studio Marketplace: https://marketplace.visualstudio.com/manage → the `nakita628`
+#   publisher → Trusted Publishing → Create (Repository owner `nakita628`, Repository `inferql`,
+#   Workflow `release.yml`, Environment `release`). See
+#   https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+#   The Marketplace credential lasts 15 minutes, and Azure DevOps retires global PATs on
+#   2026-12-01, so OIDC is the way to publish from CI.
+#
+# Action versions are tracked by Renovate, which pins each one to its digest
+# (config:best-practices) and keeps the @vX.Y.Z tag as a comment.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: release
+    permissions:
+      # Push the version branch and the release tags, and create GitHub releases.
+      contents: write
+      # Open and update the "Version Packages" pull request.
+      pull-requests: write
+      # The OIDC token that npm and the Marketplace exchange for a short-lived publish credential.
+      id-token: write
+    steps:
+      # changesets/action pushes the version commit and the tags through the GitHub API with its
+      # own `github-token`, so the checkout keeps no credentials.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+        with:
+          node-version: '24'
+          cache: true
+
+      # `prepare` builds every workspace, so dist/ is ready for npm and the VSIX.
+      - run: vp install --frozen-lockfile
+
+      # setup-vp puts `vp` on PATH, not `pnpm`; `vp run` runs the root scripts with both available,
+      # which `changeset publish` (pnpm publish) and the extension's publish script need.
+      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version-script: vp run changeset:version
+          publish-script: vp run release
+          pr-title: 'chore: version packages'
+          commit-message: 'chore: version packages'
+        env:
+          # @changesets/changelog-github reads pull requests and authors with it.
+          GITHUB_TOKEN: ${{ github.token }}

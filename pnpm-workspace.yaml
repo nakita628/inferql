@@ -1,0 +1,11 @@
+packages:
+  - packages/*
+  - example/*
+allowBuilds:
+  esbuild: true
+  # Optional native accelerator pulled in through synckit's dependency tree; the JS fallback is
+  # what inferql uses, so its build script stays off.
+  msgpackr-extract: false
+  # Downloads a signing binary for publishing to the Marketplace; packaging a local VSIX
+  # (packages/vscode-inferql `package`) does not sign, so its build script stays off.
+  '@vscode/vsce-sign': false

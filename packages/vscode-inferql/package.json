@@ -1,0 +1,64 @@
+{
+  "name": "vscode-inferql",
+  "displayName": "InferQL",
+  "version": "0.0.4",
+  "private": true,
+  "description": "SQL completion and types for InferQL's sql(...): keywords, tables and columns at the cursor, each column with its table, database type and TypeScript type.",
+  "categories": [
+    "Programming Languages"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nakita628/inferql.git",
+    "directory": "packages/vscode-inferql"
+  },
+  "publisher": "nakita628",
+  "type": "module",
+  "main": "./dist/extension.cjs",
+  "scripts": {
+    "build": "vp pack",
+    "check": "vp check",
+    "fix": "vp check --fix",
+    "test": "vp pack && vp test",
+    "package": "vp pack && vsce package --no-dependencies --out vscode-inferql.vsix",
+    "publish:marketplace": "vsce publish --oidc --no-dependencies --skip-duplicate"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/vscode": "~1.100.0",
+    "@vscode/vsce": "4.1.1",
+    "inferql": "workspace:*",
+    "oxlint": "1.79.0",
+    "typescript": "^7.0.2"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "InferQL",
+      "properties": {
+        "inferql.dialect": {
+          "type": "string",
+          "description": "The dialect, when the project's tsconfig.json has no inferql content mapper entry to read it from: sqlite, mysql or postgres."
+        },
+        "inferql.migrationsDir": {
+          "type": "string",
+          "description": "The migrations directory, relative to the project (the folder of the nearest package.json). Read from tsconfig.json's inferql content mapper entry when there is one."
+        },
+        "inferql.databaseUrl": {
+          "type": "string",
+          "description": "The connection string, for MySQL and PostgreSQL. SQLite needs none: the migrations are applied to an in-memory database."
+        }
+      }
+    }
+  },
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.100.0"
+  }
+}

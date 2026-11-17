@@ -1,0 +1,41 @@
+name: Lint
+
+# The format, oxlint and type checks, as `pnpm check` runs them locally: every workspace is built
+# (the examples and the lint rule read packages/inferql/dist), then `vp fmt --check` over the
+# repository and `vp check` in packages/* and example/sqlite.
+#
+# Action versions are tracked by Renovate, which pins each one to its digest
+# (config:best-practices) and keeps the @vX.Y.Z tag as a comment.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@49c3e4e92c52e7f8392712a9267bbe71c5ab30e5 # v1.19.0
+        with:
+          # Node 24: the SQLite dialect uses node:sqlite, which is behind --experimental-sqlite on 22.
+          node-version: '24'
+          cache: true
+
+      - run: vp install --frozen-lockfile
+
+      # setup-vp puts `vp` on PATH, not `pnpm`; `vp run` runs the root script with both available.
+      - run: vp run check
