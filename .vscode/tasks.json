@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build inferql extension",
+      "type": "shell",
+      "command": "vp run --filter ./packages/inferql --filter ./packages/vscode-inferql build",
+      "problemMatcher": []
+    }
+  ]
+}

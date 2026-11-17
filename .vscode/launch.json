@@ -1,0 +1,17 @@
+{
+  // F5: a VS Code window with packages/vscode-inferql loaded from source, opened on example/sqlite.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run inferql extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-inferql",
+        "${workspaceFolder}/example/sqlite"
+      ],
+      "outFiles": ["${workspaceFolder}/packages/vscode-inferql/dist/**/*.cjs"],
+      "preLaunchTask": "build inferql extension"
+    }
+  ]
+}

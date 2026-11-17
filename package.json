@@ -1,0 +1,29 @@
+{
+  "name": "inferql-monorepo",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "prepare": "vp run -r build",
+    "deps": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
+    "build": "vp run -r build",
+    "check": "vp run -r build && vp fmt --check && vp run --filter './packages/*' --filter ./example/sqlite check",
+    "fix": "vp fmt && vp run --filter './packages/*' --filter ./example/sqlite check --fix",
+    "test": "vp run -r build && vp run -r test",
+    "example": "vp run -r build && vp run --filter ./example/sqlite check",
+    "example:mysql": "vp run -r build && vp run --filter ./example/mysql check",
+    "example:postgres": "vp run -r build && vp run --filter ./example/postgres check",
+    "changeset": "changeset",
+    "changeset:version": "changeset version && vp fmt",
+    "release": "changeset publish && pnpm --filter vscode-inferql run publish:marketplace"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "1.0.1",
+    "@changesets/cli": "3.0.3",
+    "@types/node": "^26.4.1",
+    "oxlint": "1.79.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "vite-plus": "0.3.0"
+  },
+  "packageManager": "pnpm@11.7.0"
+}
